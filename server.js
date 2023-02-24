@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
-const PORT = 3002;
-const databaseJSON = require('./db/db.json');
 const app = express();
+const PORT = process.env.PORT || 3002;
+const databaseJSON = require('./db/db.json');
 const fs = require('fs');
 const uuid = require('./helpers/uuid');
 
@@ -20,13 +20,13 @@ app.get('*', (req, res) =>
 
 // app.get('/api/notes', (req, res) => res.json(databaseJSON));
 
-app.get('/api/notes', (req, res) =>{
-  fs.readFile('db.json', 'utf-8', (err, dbJSONString) => {
-    if (err) {
-      console.error(err)
-    }
-  })
-})
+// app.get('/api/notes', (req, res) => {
+//   fs.readFile('db.json', 'utf-8', (err, dbJSONString) => {
+//     if (err) {
+//       console.error(err)
+//     }
+//   })
+// })
 
 app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request received to add a review`);

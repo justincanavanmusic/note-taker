@@ -4,7 +4,9 @@ const PORT = 3002;
 const databaseJSON = require('./db/db.json');
 const app = express();
 const fs = require('fs');
+// const fsUtils = require('./helpers/fsUtils.js')
 const uuid = require('./helpers/uuid');
+const notes = require('./routes/notes.js')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

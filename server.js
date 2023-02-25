@@ -10,23 +10,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
+//GET request made to /notes endpoint
+//sends notes.html from server to the client web browser; then renders the HTML file on the page for user
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, './public/notes.html'))
 );
 
-app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, './public/index.html'))
-);
-
-// app.get('/api/notes', (req, res) => res.json(databaseJSON));
-
-// app.get('/api/notes', (req, res) => {
-//   fs.readFile('db.json', 'utf-8', (err, dbJSONString) => {
-//     if (err) {
-//       console.error(err)
-//     }
-//   })
-// })
+//GET request made to /api/notes endpoint
+//reads db.json and creates a string (this is what readFile creates) with all of the data from the page it read. 
+app.get('/api/notes', (req, res) => {
+  fs.readFile('./db/db.json', 'utf-8', (err, dbJSONString) => {
+    if (err) {
+      console.error(err)
+    }
+    // console.log(dbJSONString);
+    res.json(JSON.parse(dbJSONString));
+    //res.json makes the parsed object a JSON string that makes it readable for the client
+ 
+  })
+})
 
 app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request received to add a review`);
@@ -37,13 +39,16 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
           title,
           text,
-          review_id: uuid(),
+          id: uuid(),
         };
          var dbArray;
 //readFile extracts the data from db.json which is in JSON format (string used to represent JS objects)
-//we use JSON.parse to convert it into a JS Object which can help us work with the data
+//we use JSON.parse to convert it into a JS Object
+
     fs.readFile('./db/db.json', 'utf-8', (err, dbJSONArrayOfObj) => {
       err ? console.log(err) : dbArray = JSON.parse(dbJSONArrayOfObj);
+
+      console.log(dbJSONArrayOfObj)
    
       dbArray.push(newNote); //pushes each newNote created to dbArray
       // console.log(dbJSONArrayOfObj);  //dbArray is just dbJSONArray.. in JSON Obj Format
@@ -73,6 +78,10 @@ app.post('/api/notes', (req, res) => {
     res.status(500).json("Error in posting new note");
   }
 });
+
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, './public/index.html'))
+);
 
 app.listen(PORT, () =>
   console.log(`Example app listening at http://localhost:${PORT}`)

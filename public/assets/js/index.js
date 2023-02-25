@@ -32,8 +32,6 @@ const getNotes = () =>
       'Content-Type': 'application/json',
     },
   })
-  .then((res) => res.json())
-  .then((data) => data);
 
 
 const saveNote = (note) =>
@@ -120,11 +118,23 @@ const handleRenderSaveBtn = () => {
   }
 };
 
+
+// const renderNoteList2 = (notes) => {
+//   // console.log(notes)
+//   return notes.json();
+// }
+// renderNoteList2(notes)
+// .then(jsonNotesObject => {
+
+// })
+
 // Render the list of note titles
-const renderNoteList = async (jsonString) => {
-  let jsonNotesObject = await jsonString.json();
-  console.log(jsonNotesObject)
-  
+const renderNoteList = async (notes) => {
+  // console.log(notes)
+  let jsonNotesObject = await notes.json();
+  // console.log(jsonNotesObject)
+
+
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
@@ -143,19 +153,19 @@ const renderNoteList = async (jsonString) => {
 
     liEl.append(spanEl);
 
-    // if (delBtn) {
-    //   const delBtnEl = document.createElement('i');
-    //   delBtnEl.classList.add(
-    //     'fas',
-    //     'fa-trash-alt',
-    //     'float-right',
-    //     'text-danger',
-    //     'delete-note'
-    //   );
-    //   delBtnEl.addEventListener('click', handleNoteDelete);
+    if (delBtn) {
+      const delBtnEl = document.createElement('i');
+      delBtnEl.classList.add(
+        'fas',
+        'fa-trash-alt',
+        'float-right',
+        'text-danger',
+        'delete-note'
+      );
+      delBtnEl.addEventListener('click', handleNoteDelete);
 
-    //   liEl.append(delBtnEl);
-    // }
+      liEl.append(delBtnEl);
+    }
 
     return liEl;
   };
@@ -177,7 +187,8 @@ const renderNoteList = async (jsonString) => {
 };
 
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndRenderNotes = () => getNotes()
+.then(renderNoteList);
 
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);

@@ -60,6 +60,7 @@ const renderActiveNote = () => {
     noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
+    
   } else {
     noteTitle.removeAttribute('readonly');
     noteText.removeAttribute('readonly');
@@ -97,11 +98,18 @@ const handleNoteDelete = (e) => {
   });
 };
 
-// Sets the activeNote and displays it
+// Uses the event.target to use the data from whichever list
+//JSON.parse formats the data so it a JSON Object as opposed to a json string. Once we parse the data, it is able to display on the page. 
+//.parentElement is a DOM property that returns the parent element of the selected element
+//.getAttribute returns the value of an elements attribute
+//e.target is the <span> element that contains the Note Title displayed on the page
+//that span element is targeting the parent element (<li>)
+
 const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
   renderActiveNote();
+  console.log(activeNote)
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
@@ -118,7 +126,8 @@ const handleRenderSaveBtn = () => {
   }
 };
 
-
+//async tells us that the function is including asynchronous code
+//await is used inside the async function to wait for a promise to resolve/reject
 // const renderNoteList2 = (notes) => {
 //   // console.log(notes)
 //   return notes.json();
@@ -130,11 +139,12 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-  // console.log(notes)
-  let jsonNotesObject = await notes.json();
-  // console.log(jsonNotesObject)
+  // notes is placeholder
+  let jsonNotesArrayOfObj = await notes.json();
+  console.log(jsonNotesArrayOfObj)
 
-
+  //noteList is selecting the div container for all list items and the ul that holds each list item
+//this clears the list so everytime the array prints, there are no duplicates. when I commented out this code it would print the last added note PLUS all of the array items that were already on the page
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
@@ -169,16 +179,22 @@ const renderNoteList = async (notes) => {
 
     return liEl;
   };
-
-  if (jsonNotesObject.length === 0) {
+//running createLi function.. the 1st parameter (text) is "no saved notes" and the 2nd parameter is saying there is no delBtn
+  if (jsonNotesArrayOfObj.length === 0) {
     noteListItems.push(createLi('No saved Notes', false));
   }
+//iterating over the Array from the db.json file
+//for each object in the array, a list item is created using the createLi function with the text being set to the currentNoteObj's title property
+//dataset property sets the value of the data-note attribute and then stringifys it so it can be read
+  jsonNotesArrayOfObj.forEach((currentNoteObj) => {
+    const li = createLi(currentNoteObj.title);
+    // console.log(typeof currentNoteObj);
 
-  jsonNotesObject.forEach((note) => {
-    const li = createLi(note.title);
-    li.dataset.note = JSON.stringify(note);
+    li.dataset.note = JSON.stringify(currentNoteObj);
+    console.log(li.dataset.note)//prints a separate string representation of the currentNoteObj. since we are in the forEach loop it will print all of the currentNoteObj but separately
 
-    noteListItems.push(li);
+    noteListItems.push(li); 
+    console.log(li)//prints the entire <li> including its attributes
   });
 
   if (window.location.pathname === '/notes') {

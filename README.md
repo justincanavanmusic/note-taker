@@ -2,15 +2,13 @@
 
 ## Description 
 
-I wanted to create an application where I could write and save notes so that if I needed to remember the tasks I had to do that day I would have a clear, concise list displayed on the page.
+I wanted to create an application where I could write and save notes so that if I documented my tasks for the day in the app, I would have a clear, concise list displayed on the page.
 
 ## Usage
 
 View live link below:
 
 https://whispering-beach-30284.herokuapp.com/
-
-
 
 ![app screenshot](./Assets/Screenshot%202023-02-26%20at%205.24.36%20PM.png)
 
